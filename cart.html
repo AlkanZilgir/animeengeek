@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cart — AnimeEngeek</title>
+  <link rel="icon" type="image/svg+xml" href="../images/favicon.svg" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand" href="../index.html"><span class="brand-icon">⟨</span>ANIME<span class="brand-accent">ENGEEK</span><span class="brand-icon">⟩</span></a>
+    <div class="nav-icons d-flex align-items-center gap-3">
+      <a href="search.html" class="nav-icon-btn"><i class="bi bi-search"></i></a>
+      <a href="favorites.html" class="nav-icon-btn"><i class="bi bi-heart"></i><span class="badge-dot" id="favCount">0</span></a>
+      <a href="cart.html" class="nav-icon-btn"><i class="bi bi-bag"></i><span class="badge-dot" id="cartCount">0</span></a>
+      <a href="orders.html" class="nav-icon-btn"><i class="bi bi-box-seam"></i></a>
+      <a href="login.html" class="nav-icon-btn" id="profileBtn"><i class="bi bi-person-circle"></i></a>
+      <a href="https://www.instagram.com/animeengeek.ks" target="_blank" class="nav-icon-btn insta-btn"><i class="bi bi-instagram"></i></a>
+    </div>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="container">
+    <span class="section-tag">My Bag</span>
+    <h1 class="section-title mt-2"><i class="bi bi-bag me-3"></i>Shopping <span class="text-gradient">Cart</span></h1>
+  </div>
+</div>
+
+<main class="section-dark py-5">
+  <div class="container">
+    <div id="cartEmpty" class="empty-state" style="display:none;">
+      <div class="empty-icon">🛍️</div>
+      <h3>Your cart is empty</h3>
+      <p>Add some amazing anime accessories to get started!</p>
+      <a href="shop.html" class="btn btn-primary-custom mt-3">Browse Shop <i class="bi bi-arrow-right ms-2"></i></a>
+    </div>
+
+    <div id="cartContent">
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <div id="cartItems"></div>
+        </div>
+        <div class="col-lg-4">
+          <div class="cart-summary">
+            <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--white);margin-bottom:1.5rem;letter-spacing:1px;">ORDER SUMMARY</h3>
+            <div class="summary-line"><span>Subtotal</span><span id="subtotal">€0.00</span></div>
+            <div class="summary-line"><span>Shipping</span><span style="color:#34d399;">FREE</span></div>
+            <div class="summary-line summary-total"><span>Total</span><span id="total">€0.00</span></div>
+
+            <!-- Promo code -->
+            <div class="mt-4 mb-4">
+              <div class="input-group-custom" style="gap:6px;">
+                <input type="text" class="form-input-custom" id="promoInput" placeholder="Promo code" style="border-radius:8px;padding:10px 14px;font-size:.85rem;" />
+                <button class="btn-primary-custom" style="border-radius:8px;padding:10px 16px;font-size:.85rem;" id="applyPromo">Apply</button>
+              </div>
+              <div id="promoMsg" class="mt-1" style="font-size:.8rem;font-family:var(--font-text);"></div>
+            </div>
+
+            <button class="btn-primary-custom w-100" style="border-radius:12px;padding:14px;font-size:1rem;" id="checkoutBtn">
+              Proceed to Checkout <i class="bi bi-arrow-right ms-2"></i>
+            </button>
+            <div class="text-center mt-3">
+              <small class="text-muted-light" style="font-size:.8rem;"><i class="bi bi-lock me-1"></i>Secure checkout · Free shipping</small>
+            </div>
+
+            <!-- Payment icons -->
+            <div class="d-flex gap-2 justify-content-center mt-3 flex-wrap">
+              <span style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.7rem;color:var(--white-60);">💳 Card</span>
+              <span style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.7rem;color:var(--white-60);">🏦 Bank</span>
+              <span style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.7rem;color:var(--white-60);">💰 Cash</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer pt-3 pb-3">
+  <div class="container"><p class="footer-copy text-center">&copy; 2025 AnimeEngeek</p></div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/main.js"></script>
+<script src="../js/products.js"></script>
+<script>
+  function renderCart() {
+    const cart = getCart();
+    const cartItems = document.getElementById('cartItems');
+    const cartEmpty = document.getElementById('cartEmpty');
+    const cartContent = document.getElementById('cartContent');
+
+    if (cart.length === 0) {
+      cartEmpty.style.display = 'block';
+      cartContent.style.display = 'none';
+      return;
+    }
+    cartEmpty.style.display = 'none';
+    cartContent.style.display = 'block';
+
+    let subtotal = 0;
+    cartItems.innerHTML = '';
+
+    cart.forEach(item => {
+      const product = PRODUCTS.find(p => p.id === item.id);
+      if (!product) return;
+      subtotal += product.price * item.qty;
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <div class="cart-item-img">${product.emoji}</div>
+        <div class="flex-grow-1">
+          <div class="cart-item-series">${product.series}</div>
+          <div class="cart-item-name">${product.name}</div>
+          <div class="qty-control mt-2">
+            <button class="qty-btn" data-id="${item.id}" data-action="dec">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" data-id="${item.id}" data-action="inc">+</button>
+          </div>
+        </div>
+        <div class="d-flex flex-column align-items-end gap-2">
+          <div class="cart-item-price">€${(product.price * item.qty).toFixed(2)}</div>
+          <button class="qty-btn" data-id="${item.id}" data-action="remove" style="color:#f87171;border-color:rgba(248,113,113,0.3);font-size:.75rem;width:auto;padding:0 10px;border-radius:6px;height:28px;">
+            <i class="bi bi-trash"></i> Remove
+          </button>
+        </div>
+      `;
+      cartItems.appendChild(div);
+    });
+
+    document.getElementById('subtotal').textContent = `€${subtotal.toFixed(2)}`;
+    document.getElementById('total').textContent = `€${subtotal.toFixed(2)}`;
+
+    // Bind buttons
+    document.querySelectorAll('.qty-btn[data-action]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = parseInt(btn.dataset.id);
+        const action = btn.dataset.action;
+        const cart = getCart();
+        const item = cart.find(i => i.id === id);
+        if (action === 'inc') { if (item) item.qty++; saveCart(cart); }
+        else if (action === 'dec') { if (item && item.qty > 1) item.qty--; else removeFromCart(id); saveCart(cart); }
+        else if (action === 'remove') { removeFromCart(id); }
+        renderCart();
+      });
+    });
+  }
+
+  // Promo code
+  document.getElementById('applyPromo').addEventListener('click', () => {
+    const code = document.getElementById('promoInput').value.trim().toUpperCase();
+    const msg = document.getElementById('promoMsg');
+    if (code === 'ANIME20') {
+      msg.textContent = '🎉 Code applied! 20% discount activated.';
+      msg.style.color = '#34d399';
+    } else if (code === 'GEEK10') {
+      msg.textContent = '✅ Code applied! 10% discount activated.';
+      msg.style.color = '#34d399';
+    } else {
+      msg.textContent = '❌ Invalid promo code. Try ANIME20 or GEEK10';
+      msg.style.color = '#f87171';
+    }
+  });
+
+  // Checkout
+  document.getElementById('checkoutBtn').addEventListener('click', () => {
+    const user = getUser();
+    if (!user) {
+      showToast('Please login to checkout!', 'error', 'bi-person-x');
+      setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+      return;
+    }
+    const cart = getCart();
+    const orders = JSON.parse(localStorage.getItem('ag_orders') || '[]');
+    const total = cart.reduce((s, i) => { const p = PRODUCTS.find(x => x.id === i.id); return s + (p ? p.price * i.qty : 0); }, 0);
+    orders.push({ id: 'ORD-' + Date.now(), items: cart, total: total.toFixed(2), date: new Date().toLocaleDateString(), status: 'processing' });
+    localStorage.setItem('ag_orders', JSON.stringify(orders));
+    saveCart([]);
+    showToast('🎉 Order placed successfully!', 'success', 'bi-check-circle');
+    setTimeout(() => { window.location.href = 'orders.html'; }, 1500);
+  });
+
+  renderCart();
+</script>
+</body>
+</html>
